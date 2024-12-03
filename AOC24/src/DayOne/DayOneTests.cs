@@ -4,8 +4,8 @@ namespace AOC24.DayOne;
 
 public class DayOneTests
 {
-    private const string InputFilePath = "./Day1/input.txt";
-    private const string TestInputFilePath = "./Day1/input-test.txt";
+    private const string InputFilePath = "./DayOne/Resources/input.txt";
+    private const string TestInputFilePath = "./DayOne/Resources/input-test.txt";
 
     private readonly ITestOutputHelper _output;
 
