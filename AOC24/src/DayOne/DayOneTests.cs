@@ -18,7 +18,7 @@ public class DayOneTests
     public void ExamplePartOne()
     {
         // Arrange
-        var expected = 11;
+        const int expected = 11;
         IReadOnlyList<int> first = [3, 4, 2, 1, 3, 3];
         IReadOnlyList<int> second = [4, 3, 5, 3, 9, 3];
 
@@ -36,7 +36,7 @@ public class DayOneTests
     public void ExamplePartTwo()
     {
         // Arrange
-        var expected = 31;
+        const int expected = 31;
         IReadOnlyList<int> left = [3, 4, 2, 1, 3, 3];
         IReadOnlyList<int> right = [4, 3, 5, 3, 9, 3];
 
