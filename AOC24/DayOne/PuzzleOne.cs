@@ -34,14 +34,14 @@ public class PuzzleOne : IPuzzle<int>
 
     public int SolvePartOne()
     {
-        var Left = _input.Left.Order().ToList();
-        var Right = _input.Right.Order().ToList();
+        var left = _input.Left.Order().ToList();
+        var right = _input.Right.Order().ToList();
 
         int sum = 0;
 
         for (int i = 0; i < _input.Left.Count; i++)
         {
-            sum += Math.Abs(Left[i] - Right[i]);
+            sum += Math.Abs(left[i] - right[i]);
         }
 
         return sum;
@@ -49,22 +49,22 @@ public class PuzzleOne : IPuzzle<int>
 
     public int SolvePartTwo()
     {
-        var occurances = new Dictionary<int, int>();
+        var occurrences = new Dictionary<int, int>();
 
         foreach (var number in _input.Right)
         {
-            if (!occurances.TryAdd(number, number))
+            if (!occurrences.TryAdd(number, number))
             {
-                occurances[number]+=number;
+                occurrences[number]+=number;
             }
         }
 
         int sum = 0;
         foreach (var number in _input.Left)
         {
-            if (occurances.TryGetValue(number, out int occurance))
+            if (occurrences.TryGetValue(number, out var occurrence))
             {
-                sum += occurance;
+                sum += occurrence;
             }
         }
 
