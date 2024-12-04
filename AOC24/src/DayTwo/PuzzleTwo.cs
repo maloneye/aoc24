@@ -19,20 +19,19 @@ public class PuzzleTwo : IPuzzle<int>
             {
                 List<int> report = [];
                 var line = reader.ReadLine().AsSpan();
-                var parts =  line.Split(' ');
                 
                 int start = 0;
                 while (start < line.Length)
                 {
-                    int spaceIndex = line[start..].IndexOf(' ');
-                    if (spaceIndex == -1)
+                    int splitIndex = line[start..].IndexOf(' ');
+                    if (splitIndex == -1)
                     {
                         report.Add(int.Parse(line[start..]));
                         break;
                     }
 
-                    report.Add(int.Parse(line.Slice(start, spaceIndex)));
-                    start += spaceIndex + 1;
+                    report.Add(int.Parse(line.Slice(start, splitIndex)));
+                    start += splitIndex + 1;
                 }
 
                 reports.Add(report);
@@ -55,33 +54,41 @@ public class PuzzleTwo : IPuzzle<int>
 
         foreach (var report in _input.Reports)
         {
-            // check first 2 numbers this sets direction
-            var initalDiff = report[0] - report[1];
-            if (IsUnsafeDiff(initalDiff))
+            if (IsReportSafe(report))
             {
-                continue;
-            }
-
-            // assume that its safe, check remaining to prove otherwise
-            safeReports++;
-            
-            for (var i = 1; i < report.Count - 1; i++)
-            {
-                var diff = report[i] - report[i + 1];
-                
-                if (diff * initalDiff < 0 || IsUnsafeDiff(diff))
-                {
-                    safeReports--;
-                    break;
-                }
+                safeReports++;
             }
         }
 
         return safeReports;
     }
-    
 
-    public int SolvePartTwo() => throw new NotImplementedException();
+    private static bool IsReportSafe(IReadOnlyList<int> report)
+    {
+        // check first 2 numbers this sets direction
+        var initalDiff = report[0] - report[1];
+        if (IsUnsafeDiff(initalDiff))
+        {
+            return false;
+        }
+        
+        for (var i = 1; i < report.Count - 1; i++)
+        {
+            var diff = report[i] - report[i + 1];
+                
+            if (diff * initalDiff < 0 || IsUnsafeDiff(diff))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public int SolvePartTwo()
+    {
+        return 0;
+    }
 
     private static bool IsUnsafeDiff(int diff) => Math.Abs(diff) is < 1 or > 3;
 }
