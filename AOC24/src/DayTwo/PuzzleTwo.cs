@@ -63,10 +63,40 @@ public class PuzzleTwo : IPuzzle<int>
         return safeReports;
     }
 
+    public int SolvePartTwo()
+    {
+        int safeReports = 0;
+
+        foreach (var report in _input.Reports)
+        {
+            if (IsReportSafe(report))
+            {
+                safeReports++;
+            }
+            else
+            {
+                for (int i = 0; i < report.Count; i++)
+                {
+                    var dampedReport = report.ToList();
+                    dampedReport.RemoveAt(i);
+                    
+                    if (IsReportSafe(dampedReport))
+                    {
+                        safeReports++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return safeReports;
+    }
+    
     private static bool IsReportSafe(IReadOnlyList<int> report)
     {
         // check first 2 numbers this sets direction
         var initalDiff = report[0] - report[1];
+        
         if (IsUnsafeDiff(initalDiff))
         {
             return false;
@@ -84,11 +114,6 @@ public class PuzzleTwo : IPuzzle<int>
 
         return true;
     }
-
-    public int SolvePartTwo()
-    {
-        return 0;
-    }
-
+    
     private static bool IsUnsafeDiff(int diff) => Math.Abs(diff) is < 1 or > 3;
 }

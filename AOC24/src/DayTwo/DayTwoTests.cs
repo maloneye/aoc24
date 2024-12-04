@@ -106,5 +106,14 @@ public class DayTwoTests
     [Fact]
     public void PartTwoTest()
     {
+        // Arrange
+        using var reader = new StreamReader(File.OpenRead(InputFilePath));
+        var input = PuzzleTwo.Input.Parse(reader);
+        var puzzle = new PuzzleTwo(input);
+
+        // Act
+        var answer = puzzle.SolvePartTwo();
+
+        _output.WriteLine($"Answer: {answer}");
     }
 }
