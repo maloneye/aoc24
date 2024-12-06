@@ -1,26 +1,27 @@
-using AOC24.DayOne;
 using Xunit.Abstractions;
 
 namespace AOC24.DayTwo;
 
 public class DayTwoTests
 {
-    private const string InputFilePath = "./DayTwo/Resources/input.txt";
-    private const string TestInputFilePath = "./DayTwo/Resources/input-test.txt";
+    const string ExampleInput = "7 6 4 2 1\n1 2 7 8 9\n9 7 6 2 1\n1 3 2 4 5\n8 6 4 4 1\n1 3 6 7 9";
+
+    private readonly PuzzleTwo _puzzle;
+    private readonly PuzzleTester<int> _tester;
 
     private readonly ITestOutputHelper _output;
 
     public DayTwoTests(ITestOutputHelper output)
     {
         _output = output;
+        _puzzle = new();
+        _tester = new(_puzzle, new InputScraper());
     }
 
     [Fact]
-    public void ExamplePartOne()
+    public void InputParserTest()
     {
         // Arrange
-        const int expected = 2;
-
         List<List<int>> reports =
         [
             [7, 6, 4, 2, 1],
@@ -31,11 +32,23 @@ public class DayTwoTests
             [1, 3, 6, 7, 9],
         ];
 
-        var input = new PuzzleTwo.Input(reports);
-        var puzzle = new PuzzleTwo(input);
+        var expected = new PuzzleTwo.Input(reports);
 
         // Act
-        var actual = puzzle.SolvePartOne();
+        var actual = PuzzleTwo.Input.Parse(ExampleInput);
+
+        // Assert
+        Assert.Equivalent(expected, actual);
+    }
+
+    [Fact]
+    public void ExamplePartOne()
+    {
+        // Arrange
+        const int expected = 2;
+
+        // Act
+        var actual = _puzzle.SolvePartOne(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -47,72 +60,25 @@ public class DayTwoTests
         // Arrange
         const int expected = 4;
 
-        List<List<int>> reports =
-        [
-            [7, 6, 4, 2, 1],
-            [1, 2, 7, 8, 9],
-            [9, 7, 6, 2, 1],
-            [1, 3, 2, 4, 5],
-            [8, 6, 4, 4, 1],
-            [1, 3, 6, 7, 9],
-        ];
-
-        var input = new PuzzleTwo.Input(reports);
-        var puzzle = new PuzzleTwo(input);
-
         // Act
-        var actual = puzzle.SolvePartTwo();
+        var actual = _puzzle.SolvePartTwo(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public void InputParserTest()
+    public async Task PartOneTest()
     {
-        // Arrange
-        List<List<int>> sample =
-        [
-            [92, 94, 97, 98, 97],
-            [26, 27, 28, 31, 33, 34, 37, 37],
-            [56, 59, 60, 61, 62, 65, 69],
-            [42, 44, 46, 48, 55],
-        ];
-
-        var expected = new PuzzleTwo.Input(sample);
-        using var reader = new StreamReader(File.OpenRead(TestInputFilePath));
-        
-        // Act
-        var actual = PuzzleTwo.Input.Parse(reader);
-
-        // Assert
-        Assert.Equivalent(expected, actual);
-    }
-
-    [Fact]
-    public void PartOneTest()
-    {
-        // Arrange
-        using var reader = new StreamReader(File.OpenRead(InputFilePath));
-        var input = PuzzleTwo.Input.Parse(reader);
-        var puzzle = new PuzzleTwo(input);
-
-        // Act
-        var answer = puzzle.SolvePartOne();
+        var answer = await _tester.SolvePartOne();
 
         _output.WriteLine($"Answer: {answer}");
     }
 
     [Fact]
-    public void PartTwoTest()
+    public async Task PartTwoTest()
     {
-        // Arrange
-        using var reader = new StreamReader(File.OpenRead(InputFilePath));
-        var input = PuzzleTwo.Input.Parse(reader);
-        var puzzle = new PuzzleTwo(input);
-
-        // Act
-        var answer = puzzle.SolvePartTwo();
+        var answer = await _tester.SolvePartTwo();
 
         _output.WriteLine($"Answer: {answer}");
     }

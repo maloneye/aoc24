@@ -4,14 +4,31 @@ namespace AOC24.DayOne;
 
 public class DayOneTests
 {
-    private const string InputFilePath = "./DayOne/Resources/input.txt";
-    private const string TestInputFilePath = "./DayOne/Resources/input-test.txt";
+    private const string ExampleInput = "3   4\n4   3\n2   5\n1   3\n3   9\n3   3";
+
+    private readonly PuzzleOne _puzzle;
+    private readonly PuzzleTester<int> _tester;
 
     private readonly ITestOutputHelper _output;
 
     public DayOneTests(ITestOutputHelper output)
     {
         _output = output;
+        _puzzle = new();
+        _tester = new(_puzzle, new InputScraper());
+    }
+
+    [Fact]
+    public void InputParserTest()
+    {
+        // Arrange
+        var expected = new PuzzleOne.Input(left: [3, 4, 2, 1, 3, 3], right: [4, 3, 5, 3, 9, 3]);
+
+        // Act
+        var actual = PuzzleOne.Input.Parse(ExampleInput);
+
+        // Assert
+        Assert.Equivalent(expected, actual);
     }
 
     [Fact]
@@ -19,14 +36,9 @@ public class DayOneTests
     {
         // Arrange
         const int expected = 11;
-        IReadOnlyList<int> first = [3, 4, 2, 1, 3, 3];
-        IReadOnlyList<int> second = [4, 3, 5, 3, 9, 3];
-
-        var input = new PuzzleOne.Input(first, second);
-        var puzzle = new PuzzleOne(input);
 
         // Act
-        var actual = puzzle.SolvePartOne();
+        var actual = _puzzle.SolvePartOne(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -37,58 +49,26 @@ public class DayOneTests
     {
         // Arrange
         const int expected = 31;
-        IReadOnlyList<int> left = [3, 4, 2, 1, 3, 3];
-        IReadOnlyList<int> right = [4, 3, 5, 3, 9, 3];
-
-        var input = new PuzzleOne.Input(left, right);
-        var puzzle = new PuzzleOne(input);
 
         // Act
-        var actual = puzzle.SolvePartTwo();
+        var actual = _puzzle.SolvePartTwo(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);
     }
 
     [Fact]
-    public void InputParserTest()
+    public async Task PartOneTest()
     {
-        // Arrange
-        var expected = new PuzzleOne.Input(left: [39472, 41795, 66901, 49097], right: [15292, 28867, 41393, 61173]);
-
-        using var reader = new StreamReader(File.OpenRead(TestInputFilePath));
-
-        // Act
-        var actual = PuzzleOne.Input.Parse(reader);
-
-        // Assert
-        Assert.Equivalent(expected, actual);
-    }
-
-    [Fact]
-    public void PartOneTest()
-    {
-        // Arrange
-        using var reader = new StreamReader(File.OpenRead(InputFilePath));
-        var input = PuzzleOne.Input.Parse(reader);
-        var puzzle = new PuzzleOne(input);
-
-        // Act
-        var answer = puzzle.SolvePartOne();
+        var answer = await _tester.SolvePartOne();
 
         _output.WriteLine($"Answer: {answer}");
     }
 
     [Fact]
-    public void PartTwoTest()
+    public async Task PartTwoTest()
     {
-        // Arrange
-        using var reader = new StreamReader(File.OpenRead(InputFilePath));
-        var input = PuzzleOne.Input.Parse(reader);
-        var puzzle = new PuzzleOne(input);
-
-        // Act
-        var answer = puzzle.SolvePartTwo();
+        var answer = await _tester.SolvePartTwo();
 
         _output.WriteLine($"Answer: {answer}");
     }

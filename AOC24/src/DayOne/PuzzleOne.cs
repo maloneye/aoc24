@@ -1,3 +1,5 @@
+using AOC24.DayTwo;
+
 namespace AOC24.DayOne;
 
 public class PuzzleOne : IPuzzle<int>
@@ -7,14 +9,15 @@ public class PuzzleOne : IPuzzle<int>
         public IReadOnlyList<int> Left { get; } = left.ToList();
         public IReadOnlyList<int> Right { get; } = right.ToList();
 
-        public static Input Parse(StreamReader reader)
+        public static Input Parse(string rawInput)
         {
+            var lines = rawInput.Split("\n");
+
             var left = new List<int>();
             var right = new List<int>();
 
-            while (!reader.EndOfStream)
+            foreach (var line in lines)
             {
-                var line = reader.ReadLine().AsSpan();
                 var splitIndex = line.IndexOf(' ');
 
                 left.Add(int.Parse(line[..splitIndex]));
@@ -25,21 +28,17 @@ public class PuzzleOne : IPuzzle<int>
         }
     }
 
-    private readonly Input _input;
-
-    public PuzzleOne(Input input)
+    public int Day { get; } = 1;
+    
+    public int SolvePartOne(string rawInput)
     {
-        _input = input;
-    }
-
-    public int SolvePartOne()
-    {
-        var left = _input.Left.Order().ToList();
-        var right = _input.Right.Order().ToList();
+        var input = Input.Parse(rawInput);
+        var left = input.Left.Order().ToList();
+        var right = input.Right.Order().ToList();
 
         int sum = 0;
 
-        for (int i = 0; i < _input.Left.Count; i++)
+        for (int i = 0; i < input.Left.Count; i++)
         {
             sum += Math.Abs(left[i] - right[i]);
         }
@@ -47,11 +46,13 @@ public class PuzzleOne : IPuzzle<int>
         return sum;
     }
 
-    public int SolvePartTwo()
+    public int SolvePartTwo(string rawInput)
     {
+        var input = Input.Parse(rawInput);
+
         var occurrences = new Dictionary<int, int>();
 
-        foreach (var number in _input.Right)
+        foreach (var number in input.Right)
         {
             if (!occurrences.TryAdd(number, number))
             {
@@ -60,7 +61,7 @@ public class PuzzleOne : IPuzzle<int>
         }
 
         int sum = 0;
-        foreach (var number in _input.Left)
+        foreach (var number in input.Left)
         {
             if (occurrences.TryGetValue(number, out var occurrence))
             {

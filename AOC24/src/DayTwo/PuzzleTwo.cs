@@ -2,35 +2,34 @@ namespace AOC24.DayTwo;
 
 public class PuzzleTwo : IPuzzle<int>
 {
-    public class Input
+    
+    public class Input(IReadOnlyList<IReadOnlyList<int>> reports)
     {
-        public IReadOnlyList<IReadOnlyList<int>> Reports { get; }
+        public IReadOnlyList<IReadOnlyList<int>> Reports { get; } = reports;
 
-        public Input(IReadOnlyList<IReadOnlyList<int>> reports)
+        public static Input Parse(string rawData)
         {
-            Reports = reports;
-        }
-
-        public static Input Parse(StreamReader reader)
-        {
+            var lines = rawData.Split("\n");
             List<List<int>> reports = [];
-            
-            while (!reader.EndOfStream)
+
+            foreach (var line in lines)
             {
                 List<int> report = [];
-                var line = reader.ReadLine().AsSpan();
-                
+
+
                 int start = 0;
+
                 while (start < line.Length)
                 {
                     int splitIndex = line[start..].IndexOf(' ');
+
                     if (splitIndex == -1)
                     {
                         report.Add(int.Parse(line[start..]));
                         break;
                     }
 
-                    report.Add(int.Parse(line.Slice(start, splitIndex)));
+                    report.Add(int.Parse(line.Substring(start, splitIndex)));
                     start += splitIndex + 1;
                 }
 
@@ -40,19 +39,15 @@ public class PuzzleTwo : IPuzzle<int>
             return new Input(reports);
         }
     }
-
-    private readonly Input _input;
-
-    public PuzzleTwo(Input input)
+    
+    public int Day { get; } = 2;
+    
+    public int SolvePartOne(string rawInput)
     {
-        _input = input;
-    }
-
-    public int SolvePartOne()
-    {
+        var input =  Input.Parse(rawInput);
         int safeReports = 0;
 
-        foreach (var report in _input.Reports)
+        foreach (var report in input.Reports)
         {
             if (IsReportSafe(report))
             {
@@ -63,11 +58,12 @@ public class PuzzleTwo : IPuzzle<int>
         return safeReports;
     }
 
-    public int SolvePartTwo()
+    public int SolvePartTwo(string rawInput)
     {
+        var input =  Input.Parse(rawInput);
         int safeReports = 0;
 
-        foreach (var report in _input.Reports)
+        foreach (var report in input.Reports)
         {
             if (IsReportSafe(report))
             {
@@ -79,7 +75,7 @@ public class PuzzleTwo : IPuzzle<int>
                 {
                     var dampedReport = report.ToList();
                     dampedReport.RemoveAt(i);
-                    
+
                     if (IsReportSafe(dampedReport))
                     {
                         safeReports++;
@@ -91,21 +87,21 @@ public class PuzzleTwo : IPuzzle<int>
 
         return safeReports;
     }
-    
+
     private static bool IsReportSafe(IReadOnlyList<int> report)
     {
         // check first 2 numbers this sets direction
         var initalDiff = report[0] - report[1];
-        
+
         if (IsUnsafeDiff(initalDiff))
         {
             return false;
         }
-        
+
         for (var i = 1; i < report.Count - 1; i++)
         {
             var diff = report[i] - report[i + 1];
-                
+
             if (diff * initalDiff < 0 || IsUnsafeDiff(diff))
             {
                 return false;
@@ -114,6 +110,6 @@ public class PuzzleTwo : IPuzzle<int>
 
         return true;
     }
-    
+
     private static bool IsUnsafeDiff(int diff) => Math.Abs(diff) is < 1 or > 3;
 }
