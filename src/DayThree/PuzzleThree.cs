@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AOC24.DayTwo;
@@ -25,10 +26,16 @@ public class PuzzleThree : IPuzzle<int>
 
     public int Day { get; } = 3;
 
-    private const string OpeningTag = "mul(";
-
+    private const string MulTag = "mul(";
+    private const string DoTag = "do()";
+    private const string DontTag = "don't()";
+    
+    private bool _isMultiplyEnabled;
+    private bool _ignoreModifiers;
     public int SolvePartOne(string rawInput)
     {
+        _isMultiplyEnabled = true;
+        _ignoreModifiers = true;
         var input = Input.Parse(rawInput);
 
         var total = 0;
@@ -43,10 +50,21 @@ public class PuzzleThree : IPuzzle<int>
 
     public int SolvePartTwo(string rawInput)
     {
-        throw new NotImplementedException();
+        _isMultiplyEnabled = true;
+        _ignoreModifiers = false;
+        var input = Input.Parse(rawInput);
+
+        var total = 0;
+
+        foreach (var line in input.Instructions)
+        {
+            total += GetTotalForLine(line);
+        }
+
+        return total;
     }
 
-    private static int GetTotalForLine(string line)
+    private int GetTotalForLine(string line)
     {
         var total = 0;
         var state = State.OpeningTag;
@@ -63,6 +81,7 @@ public class PuzzleThree : IPuzzle<int>
 
                     if (IsOpeningTag(ch, line, ref i))
                     {
+                        i += 3;
                         state = State.FirstNumber;
                     }
 
@@ -111,18 +130,44 @@ public class PuzzleThree : IPuzzle<int>
         return total;
     }
 
-    private static bool IsOpeningTag(char ch, string line, ref int i)
+    private bool IsOpeningTag(char ch, string line,ref int i)
     {
-        if (ch == 'm' && line.Length >= i + 7)
+        int end = i + 7;
+        if (line.Length < end)
         {
-            var end = i + 4;
-
-            var isOpeningTag = line[i..end] is OpeningTag;
-            i += 3;
-
-            return isOpeningTag;
+            return false;
         }
 
+        switch (ch)
+        {
+            case 'm':
+            {
+                end = i + 4;
+                return line[i..end] is MulTag && _isMultiplyEnabled;
+            }
+            
+            case 'd':
+                if (_ignoreModifiers)
+                {
+                    break;
+                }
+
+                var slice = line[i..end];
+
+                if (slice.Contains(DoTag))
+                {
+                    i += 3;
+                    _isMultiplyEnabled = true;
+                }
+                else if (slice.Contains(DontTag))
+                {
+                    i += 6;
+                    _isMultiplyEnabled = false;
+                }
+
+                break;
+        }
+        
         return false;
     }
 }
