@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AOC24.DayTwo;
 
-public class PuzzleThree : IPuzzle<int>
+public class Puzzle3 : IPuzzle<int>
 {
     public class Input(IReadOnlyList<string> instructions)
     {

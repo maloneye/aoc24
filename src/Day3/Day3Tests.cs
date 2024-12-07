@@ -2,17 +2,17 @@ using Xunit.Abstractions;
 
 namespace AOC24.DayTwo;
 
-public class DayThreeTests
+public class Day3Tests
 {
     const string ExampleInputOne = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
     const string ExampleInputTwo = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
    
-    private readonly PuzzleThree _puzzle;
+    private readonly Puzzle3 _puzzle;
     private readonly PuzzleTester<int> _tester;
 
     private readonly ITestOutputHelper _output;
 
-    public DayThreeTests(ITestOutputHelper output)
+    public Day3Tests(ITestOutputHelper output)
     {
         _output = output;
         _puzzle = new();
