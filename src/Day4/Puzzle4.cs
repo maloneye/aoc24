@@ -209,12 +209,39 @@ public class Puzzle4 : IPuzzle<int>
         return sum;
     }
 
+    public int SolvePartTwo(string rawInput)
+    {
+        var sum = 0;
+        var input = Input.Parse(rawInput);
+
+        for (int y = 1; y < input.YBoundery - 1; y++)
+        {
+            for (int x = 1; x < input.XBoundery - 1; x++)
+            {
+                var ch = input.Crossword[x, y];
+
+                if (ch != 'A')
+                {
+                    continue;
+                }
+
+                var backSlope = new string([input.Crossword[x - 1, y - 1], ch, input.Crossword[x + 1, y + 1]]);
+                var forwardSlop = new string([input.Crossword[x - 1, y + 1], ch, input.Crossword[x + 1, y - 1]]);
+
+                if (IsMasBidirectional(backSlope) && IsMasBidirectional(forwardSlop))
+                {
+                    sum++;
+                }
+
+            }
+        }
+
+        return sum;
+    }
+
     private bool IsInBoundPositive(int n, int bound) => n + 3 < bound;
 
     private bool IsInBoundNegative(int n) => n - 3 >= 0;
 
-    public int SolvePartTwo(string rawInput)
-    {
-        throw new NotImplementedException();
-    }
+    private bool IsMasBidirectional(string slice) => slice == "MAS" || new string(slice.Reverse().ToArray()) == "MAS";
 }

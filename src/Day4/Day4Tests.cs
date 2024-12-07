@@ -62,7 +62,7 @@ public class Day4Tests
     public void ExamplePartTwo()
     {
         // Arrange
-        const int expected = 31;
+        const int expected = 9;
 
         // Act
         var actual = _puzzle.SolvePartTwo(ExampleInput);
