@@ -14,7 +14,7 @@ public class Day6Tests
     public Day6Tests(ITestOutputHelper output)
     {
         _output = output;
-        _puzzle6 = new();
+        _puzzle6 = new(output);
         _tester = new(_puzzle6, new InputScraper());
     }
 
@@ -35,7 +35,6 @@ public class Day6Tests
             { '#', '.', '.', '.', '.', '.', '.', '.', '.', '.' },
             { '.', '.', '.', '.', '.', '.', '#', '.', '.', '.' },
         };
-
         
         var expected = new Puzzle6.Input(expectedMap);
 
@@ -50,11 +49,12 @@ public class Day6Tests
     public void ExamplePartOne()
     {
         // Arrange
-        const int expected = 143;
+        const int expected = 41;
 
         // Act
         var actual = _puzzle6.SolvePartOne(ExampleInput);
-
+        
+        
         // Assert
         Assert.Equal(expected, actual);
     }

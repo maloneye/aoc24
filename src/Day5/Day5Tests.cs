@@ -1,6 +1,6 @@
 ﻿using Xunit.Abstractions;
 
-namespace AOC24.Day6;
+namespace AOC24.Day5;
 
 public class Day5Tests
 {
