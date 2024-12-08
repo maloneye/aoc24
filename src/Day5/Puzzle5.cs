@@ -1,3 +1,4 @@
+using System.Data;
 using System.Text;
 using AOC24.Day2;
 
@@ -59,21 +60,31 @@ public class Puzzle5 : IPuzzle<int>
         var input = Input.Parse(rawInput);
         var valid = new List<List<int>>();
 
-        return input.Updates.Where(update => IsUpdateCompliant(update, input))
-                            .Sum(update => update[update.Count / 2]);
+        return input.Updates.Where(update => IsUpdateCompliant(update, input.Rules))
+                    .Sum(update => update[update.Count / 2]);
     }
 
-    private static bool IsUpdateCompliant(IReadOnlyList<int> update, Input input)
+    public int SolvePartTwo(string rawInput)
+    {
+        var input = Input.Parse(rawInput);
+        var valid = new List<List<int>>();
+
+        return input.Updates.Where(update => !IsUpdateCompliant(update, input.Rules))
+                    .Select(update => ReorderToComply(update, input.Rules))
+                    .Sum(update => update[update.Count / 2]);
+    }
+
+    private static bool IsUpdateCompliant(IEnumerable<int> update, IDictionary<int, List<int>> rules)
     {
         List<int> seen = [];
 
         foreach (var element in update)
         {
             seen.Add(element);
-                
-            if (input.Rules.TryGetValue(element, out var rules))
+
+            if (rules.TryGetValue(element, out var ruleSet))
             {
-                if (!IsCompliantWithRules(rules, seen))
+                if (!IsCompliantWithRules(ruleSet, seen))
                 {
                     return false;
                 }
@@ -83,9 +94,9 @@ public class Puzzle5 : IPuzzle<int>
         return true;
     }
 
-    private static bool IsCompliantWithRules(List<int> rules, List<int> seen)
+    private static bool IsCompliantWithRules(IEnumerable<int> ruleSet, IEnumerable<int> seen)
     {
-        foreach (var rule in rules)
+        foreach (var rule in ruleSet)
         {
             if (seen.Contains(rule))
             {
@@ -96,8 +107,40 @@ public class Puzzle5 : IPuzzle<int>
         return true;
     }
 
-    public int SolvePartTwo(string rawInput)
+    private static IReadOnlyList<int> ReorderToComply(IEnumerable<int> update, IDictionary<int, List<int>> rules)
     {
-        throw new NotImplementedException();
+        LinkedList<int> seen = [];
+
+        foreach (var element in update)
+        {
+            seen.AddLast(element);
+
+            if (rules.TryGetValue(element, out var ruleSet))
+            {
+                if (!IsCompliantWithRules(ruleSet, seen))
+                {
+                    // Find index of first rule for this ruleSet in seen, then place the element there. curry this until we are compliant
+
+                    LinkedListNode<int> node = new(-1);
+
+                    for (int i = 0; i < seen.Count; i++)
+                    {
+                        node = seen.Find(seen.ElementAt(i)) 
+                            ?? throw new NullReferenceException();
+                        
+                        if (ruleSet.Contains(node.Value))
+                        {
+                            break;
+                        }
+                    }
+                    seen.RemoveLast();
+                    seen.AddBefore(node, element);
+
+                    ReorderToComply(seen, rules);
+                }
+            }
+        }
+
+        return seen.ToList();
     }
 }
