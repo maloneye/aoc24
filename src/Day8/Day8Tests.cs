@@ -65,7 +65,8 @@ public class Day8Tests
     public void ExamplePartTwo()
     {
         // Arrange
-        const int expected = 11387;
+        _puzzle8.IsRenderingEnabled = true;
+        const int expected = 34;
 
         // Act
         var actual = _puzzle8.SolvePartTwo(ExampleInput);
@@ -78,7 +79,6 @@ public class Day8Tests
     public async Task PartOneTest()
     {
         _puzzle8.IsRenderingEnabled = true;
-
         var answer = await _tester.SolvePartOne();
 
         _output.WriteLine($"Answer: {answer}");
@@ -87,6 +87,7 @@ public class Day8Tests
     [Fact]
     public async Task PartTwoTest()
     {
+        _puzzle8.IsRenderingEnabled = true;
         var answer = await _tester.SolvePartTwo();
 
         _output.WriteLine($"Answer: {answer}");
