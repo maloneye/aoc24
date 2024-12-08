@@ -2,7 +2,7 @@ using System.Data;
 using System.Text;
 using AOC24.Day2;
 
-namespace AOC24.Day5;
+namespace AOC24.Day6;
 
 public class Puzzle5 : IPuzzle<int>
 {
