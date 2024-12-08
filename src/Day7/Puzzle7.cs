@@ -57,11 +57,11 @@ public class Puzzle7 : IPuzzle<long>
             for (int i = 0; i < combinations; i++)
             {
                 long result = equation.Numbers[0];
-                var map = new BitArray([i]);
+                var map = ToMap(2, i, n);
 
                 for (int j = 0; j < n; j++)
                 {
-                    var operation = (Operation)(map[j] ? 1 : 0);
+                    var operation = (Operation)(map[j]);
                     result = ApplyOperator(result, equation.Numbers[j + 1], operation);
                 }
 
@@ -89,7 +89,7 @@ public class Puzzle7 : IPuzzle<long>
             for (int i = 0; i < combinations; i++)
             {
                 long result = equation.Numbers[0];
-                var map = ToTernaryMap(i, n);
+                var map = ToMap(3, i, n);
 
                 for (int j = 0; j < n; j++)
                 {
@@ -108,7 +108,7 @@ public class Puzzle7 : IPuzzle<long>
         return sum;
     }
 
-    private static IReadOnlyList<int> ToTernaryMap(int integer, int length)
+    private static IReadOnlyList<int> ToMap(int baseUnit, int integer, int length)
     {
         // Handle edge case for 0
         if (integer == 0)
@@ -122,8 +122,8 @@ public class Puzzle7 : IPuzzle<long>
         {
             if (integer > 0)
             {
-                terts.Add(integer % 3);
-                integer /= 3;
+                terts.Add(integer % baseUnit);
+                integer /= baseUnit;
             }
             else
             {
@@ -132,7 +132,7 @@ public class Puzzle7 : IPuzzle<long>
         }
 
         terts.Reverse();
-        
+
         return terts;
     }
 
