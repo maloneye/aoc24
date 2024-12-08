@@ -1,7 +1,4 @@
-using System.Data;
-using System.Diagnostics;
 using System.Text;
-using AOC24.Day2;
 using Xunit.Abstractions;
 
 namespace AOC24.Day6;
@@ -11,8 +8,8 @@ public class Puzzle6 : IPuzzle<int>
     public class Input(char[,] map)
     {
         public char[,] Map { get; } = map;
-        public int XBoundery { get; } = map.GetLength(0);
-        public int YBoundery { get; } = map.GetLength(1);
+        public int XBoundary { get; } = map.GetLength(0);
+        public int YBoundary { get; } = map.GetLength(1);
 
         public static Input Parse(string rawInput)
         {
@@ -47,10 +44,20 @@ public class Puzzle6 : IPuzzle<int>
         public readonly int Y = y;
 
         public override string ToString() => $"{X} {Y}";
+
+        public override bool Equals(object? obj) =>
+            obj is Position other && X == other.X && Y == other.Y;
+
+        public override int GetHashCode() => HashCode.Combine(X, Y);
+
+        public static bool operator ==(Position left, Position right) => left.Equals(right);
+
+        public static bool operator !=(Position left, Position right) => !(left == right);
     }
 
     public int Day { get; } = 6;
-
+    public bool IsRenderingEnabled { get; set; }
+    
     private readonly ITestOutputHelper _output;
 
     public Puzzle6(ITestOutputHelper output)
@@ -60,29 +67,13 @@ public class Puzzle6 : IPuzzle<int>
 
     public int SolvePartOne(string rawInput)
     {
-        int sum = 0;
         var input = Input.Parse(rawInput);
+        var bounds = new Position(input.XBoundary, input.YBoundary);
 
         var direction = Direction.North;
-        Position position = new(0, 0);
+        var position = GetInitialPosition(input.Map, bounds);
 
-        // find initial position of guard
-        for (int y = 0; y < input.YBoundery; y++)
-        {
-            for (int x = 0; x < input.XBoundery; x++)
-            {
-                var ch = input.Map[x, y];
-
-                if (ch == '^')
-                {
-                    position = new(x, y);
-                    sum++;
-                    break;
-                }
-            }
-        }
-
-        var bounds = new Position(input.XBoundery, input.YBoundery);
+        int sum = 1;
 
         while (IsInBoundary(position, bounds))
         {
@@ -103,7 +94,6 @@ public class Puzzle6 : IPuzzle<int>
                     sum++;
                     goto default;
                 default:
-                    input.Map[nextCell.X, nextCell.Y] = 'X';
                     position = nextCell;
                     break;
             }
@@ -111,20 +101,141 @@ public class Puzzle6 : IPuzzle<int>
             input.Map[position.X, position.Y] = GetGuardChar(direction);
         }
 
-        RenderMap(input);
+        RenderMap(input.Map, bounds);
 
         return sum;
     }
 
-    private void RenderMap(Input input)
+    public int SolvePartTwo(string rawInput)
     {
+        var sum = 0;
+        var input = Input.Parse(rawInput);
+        var bounds = new Position(input.XBoundary, input.YBoundary);
+
+        for (int y = 0; y < input.YBoundary; y++)
+        {
+            for (int x = 0; x < input.XBoundary; x++)
+            {
+                if (input.Map[x, y] != '.')
+                {
+                    continue;
+                }
+
+                // Adding obstacle
+                
+                var map = (char[,])input.Map.Clone();
+                map[x, y] = 'O';
+
+                if (IsLoopingMap(map, bounds))
+                {
+                    sum++;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    private bool IsLoopingMap(char[,] map, Position bounds)
+    {
+        var direction = Direction.North;
+        var start = GetInitialPosition(map, bounds);
+        var position = start;
+
+
+        var visited = new Dictionary<Position, List<Direction>>();
+
+        while (IsInBoundary(position, bounds))
+        {
+            var nextCell = GetNextCell(position, direction);
+
+            if (!IsInBoundary(nextCell, bounds))
+            {
+                break;
+            }
+
+            char cellChar;
+
+            switch (map[nextCell.X, nextCell.Y])
+            {
+                case 'O':
+                    goto case '#';
+                case '#':
+                    if (visited.TryGetValue(position, out var directions))
+                    {
+                        if (directions.Contains(direction))
+                        {
+                            RenderMap(map, bounds);
+                            return true;
+                        }
+
+                        directions.Add(direction);
+                    }
+                    else
+                    {
+                        visited.Add(position, [direction]);
+                    }
+
+                    direction = Rotate90(direction);
+                    cellChar = '+';
+                    break;
+                case '.':
+                    position = nextCell;
+                    cellChar = (position == start) ? '^' : GetCellVisitedChar(direction);
+                    break;
+                default:
+                    position = nextCell;
+                    cellChar = (position == start) ? '^' : '+';
+                    break;
+            }
+
+            map[position.X, position.Y] = cellChar;
+        }
+
+        return false;
+    }
+
+    private static char GetCellVisitedChar(Direction direction) => direction switch
+    {
+        Direction.North => '|',
+        Direction.South => '|',
+        Direction.East => '-',
+        Direction.West => '-',
+        _ => throw new ArgumentException($"Invalid direction: {direction}")
+    };
+
+    private static Position GetInitialPosition(char[,] map, Position bounds)
+    {
+        for (int y = 0; y < bounds.Y; y++)
+        {
+            for (int x = 0; x < bounds.X; x++)
+            {
+                var ch = map[x, y];
+
+                if (ch == '^')
+                {
+                    return new(x, y);
+                }
+            }
+        }
+
+        throw new ArgumentException("Could not find guard in map");
+    }
+
+    private void RenderMap(char[,] map, Position bounds)
+    {
+        if (!IsRenderingEnabled)
+        {
+            return;
+        }
+
         var builder = new StringBuilder();
 
-        for (int y = 0; y < input.YBoundery; y++)
+        for (int y = 0; y < bounds.Y; y++)
         {
-            for (int x = 0; x < input.XBoundery; x++)
+            for (int x = 0; x < bounds.X; x++)
             {
-                builder.Append(input.Map[x, y]);
+                builder.Append(map[x, y]);
             }
 
             builder.AppendLine();
@@ -132,11 +243,6 @@ public class Puzzle6 : IPuzzle<int>
 
         builder.AppendLine();
         _output.WriteLine(builder.ToString());
-    }
-
-    public int SolvePartTwo(string rawInput)
-    {
-        throw new NotImplementedException();
     }
 
     private static bool IsInBoundary(Position position, Position maxBounds) => position.X >= 0 && position.Y >= 0 && position.X < maxBounds.X && position.Y < maxBounds.Y;
