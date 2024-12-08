@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace AOC24.DayTwo;
+namespace AOC24.Day2;
 
 public class Puzzle3 : IPuzzle<int>
 {

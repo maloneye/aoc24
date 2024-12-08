@@ -1,8 +1,8 @@
-using AOC24.DayTwo;
+using AOC24.Day2;
 
-namespace AOC24.DayOne;
+namespace AOC24.Day1;
 
-public class PuzzleOne : IPuzzle<int>
+public class Puzzle1 : IPuzzle<int>
 {
     public class Input(IEnumerable<int> left, IEnumerable<int> right)
     {

@@ -6,7 +6,7 @@ public class Day4Tests
 {
     private const string ExampleInput = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX\nXMASAMXAMM\nXXAMMXXAMA\nSMSMSASXSS\nSAXAMASAAA\nMAMMMXMMMM\nMXMXAXMASX";
     
-    private readonly Puzzle4 _puzzle;
+    private readonly Puzzle4 _puzzle4;
     private readonly PuzzleTester<int> _tester;
 
     private readonly ITestOutputHelper _output;
@@ -14,8 +14,8 @@ public class Day4Tests
     public Day4Tests(ITestOutputHelper output)
     {
         _output = output;
-        _puzzle = new();
-        _tester = new(_puzzle, new InputScraper());
+        _puzzle4 = new();
+        _tester = new(_puzzle4, new InputScraper());
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class Day4Tests
         const int expected = 18;
 
         // Act
-        var actual = _puzzle.SolvePartOne(ExampleInput);
+        var actual = _puzzle4.SolvePartOne(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -65,7 +65,7 @@ public class Day4Tests
         const int expected = 9;
 
         // Act
-        var actual = _puzzle.SolvePartTwo(ExampleInput);
+        var actual = _puzzle4.SolvePartTwo(ExampleInput);
 
         // Assert
         Assert.Equal(expected, actual);

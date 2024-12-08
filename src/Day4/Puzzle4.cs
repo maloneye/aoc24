@@ -1,5 +1,5 @@
 using System.Text;
-using AOC24.DayTwo;
+using AOC24.Day2;
 
 namespace AOC24.Day4;
 

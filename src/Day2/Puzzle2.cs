@@ -1,4 +1,4 @@
-namespace AOC24.DayTwo;
+namespace AOC24.Day2;
 
 public class Puzzle2 : IPuzzle<int>
 {
