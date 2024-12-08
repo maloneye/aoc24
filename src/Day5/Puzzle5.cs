@@ -125,14 +125,14 @@ public class Puzzle5 : IPuzzle<int>
 
                     for (int i = 0; i < seen.Count; i++)
                     {
-                        node = seen.Find(seen.ElementAt(i)) 
-                            ?? throw new NullReferenceException();
-                        
+                        node = seen.Find(seen.ElementAt(i)) ?? throw new NullReferenceException();
+
                         if (ruleSet.Contains(node.Value))
                         {
                             break;
                         }
                     }
+
                     seen.RemoveLast();
                     seen.AddBefore(node, element);
 
