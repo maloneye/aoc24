@@ -4,8 +4,8 @@ namespace AOC24;
 
 public class InputScraper : IInputSource
 {
-    private const string CachePath = @".\cache";
-    private readonly string _session = Environment.GetEnvironmentVariable("AOC24", EnvironmentVariableTarget.User) 
+    private const string CachePath = @"./cache";
+    private readonly string _session = Environment.GetEnvironmentVariable("AOC24", EnvironmentVariableTarget.Process) 
                                        ?? throw new NullReferenceException("Session environment variable not set!");
     private bool _hasLazyLoaded;
     
@@ -57,7 +57,7 @@ public class InputScraper : IInputSource
 
         foreach (var file in files)
         {
-            var fileName = file.Split('\\').Last();
+            var fileName = file.Split('/').Last();
             var key = int.Parse(fileName);
             
             var readTask = Task.Run(async () =>
