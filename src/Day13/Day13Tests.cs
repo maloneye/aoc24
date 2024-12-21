@@ -68,7 +68,7 @@ public class Day13Tests
     public void ExamplePartTwo()
     {
         // Arrange
-        const int expected = 55312;
+        const long expected = 875318608908;
 
         // Act
         var actual = _puzzle.SolvePartTwo(ExampleInput);

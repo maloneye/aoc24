@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using Xunit.Abstractions;
 
@@ -20,7 +21,7 @@ public class Puzzle13 : IPuzzle<long>
                 var aStr = body[0].AsSpan();
                 var aStart = aStr.IndexOf('+') + 1;
                 var aMid = aStr.IndexOf(',');
-                var aEnd = aStr.LastIndexOf('+') +1;
+                var aEnd = aStr.LastIndexOf('+') + 1;
                 var aX = int.Parse(aStr[aStart..aMid]);
                 var aY = int.Parse(aStr[aEnd..]);
                 var a = new Position<long>(aX, aY);
@@ -36,7 +37,7 @@ public class Puzzle13 : IPuzzle<long>
                 var prizeStr = body[2].AsSpan();
                 var prizeStart = prizeStr.IndexOf('=') + 1;
                 var prizeMid = prizeStr.IndexOf(',');
-                var prizeEnd = prizeStr.LastIndexOf('=')+1;
+                var prizeEnd = prizeStr.LastIndexOf('=') + 1;
                 var prizeX = int.Parse(prizeStr[prizeStart..prizeMid]);
                 var prizeY = int.Parse(prizeStr[prizeEnd..]);
                 var prize = new Position<long>(prizeX, prizeY);
@@ -54,22 +55,31 @@ public class Puzzle13 : IPuzzle<long>
         public Position<long> B { get; } = b;
         public Position<long> Prize { get; private set; } = prize;
 
-        public int Tokens { get; private set; } = 0;
-
+        public long Tokens { get; private set; } = 0;
+        public bool FewerThan100 { get; set; }
         private const long CorrectionFactor = 10000000000000;
-        
-        public void AdjustForConversionError() => Prize = new Position<long>(CorrectionFactor*Prize.X, CorrectionFactor*Prize.Y);
-        
+
+        public void AdjustForConversionError() =>
+            Prize = new Position<long>(CorrectionFactor + Prize.X, CorrectionFactor + Prize.Y);
+
         public bool Solve()
         {
             // solve simultaneous equations
-            var a = (Prize.X*B.Y - Prize.Y*B.X)/(double)(A.X*B.Y -B.X*A.Y);
+            var numerator = (Prize.X * B.Y - Prize.Y * B.X);
+            var denominator = (A.X * B.Y - B.X * A.Y);
+            
+            if (numerator % denominator != 0)
+            {
+                return false;
+            }
+
+            var a = numerator / denominator;
             var b = (Prize.X - A.X * a) / B.X;
 
             var tokens = a * 3 + b;
-            Tokens = (int)tokens;
+            Tokens = tokens;
 
-            return tokens % 1 == 0 && a< 100 && b<100;
+            return !FewerThan100 || a < 100 && b < 100;
         }
     }
 
@@ -84,22 +94,36 @@ public class Puzzle13 : IPuzzle<long>
 
     public long SolvePartOne(string rawInput)
     {
-        var sum = 0;
+        var sum = 0L;
         var input = Input.Parse(rawInput);
 
         foreach (var run in input.Runs)
         {
+            run.FewerThan100 = true;
             if (run.Solve())
             {
                 sum += run.Tokens;
             }
         }
-        
+
         return sum;
     }
 
     public long SolvePartTwo(string rawInput)
     {
-        return 0;
+        var sum = 0L;
+        var input = Input.Parse(rawInput);
+
+        foreach (var run in input.Runs)
+        {
+            run.FewerThan100 = false;
+            run.AdjustForConversionError();
+            if (run.Solve())
+            {
+                sum += run.Tokens;
+            }
+        }
+
+        return sum;
     }
 }
