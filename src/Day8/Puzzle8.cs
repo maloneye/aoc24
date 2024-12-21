@@ -22,7 +22,7 @@ public class Puzzle8 : IPuzzle<long>
         var input = CharMapInput.Parse(rawInput);
         var sum = 0;
 
-        var antiNodes = new List<Position>();
+        var antiNodes = new List<Position<int>>();
 
         for (int y = 0; y < input.YBoundary; y++)
         {
@@ -50,7 +50,7 @@ public class Puzzle8 : IPuzzle<long>
         var input = CharMapInput.Parse(rawInput);
         var sum = 0;
 
-        var antiNodes = new List<Position>();
+        var antiNodes = new List<Position<int>>();
 
         for (int y = 0; y < input.YBoundary; y++)
         {
@@ -73,7 +73,7 @@ public class Puzzle8 : IPuzzle<long>
         return sum;
     }
 
-    private int GenerateExtendedNodes(CharMapInput input, Position antennaPosition, List<Position> antiNodes)
+    private int GenerateExtendedNodes(CharMapInput input, Position<int> antennaPosition, List<Position<int>> antiNodes)
     {
         var nodes = 0;
         var antenna = input.At(antennaPosition);
@@ -83,7 +83,7 @@ public class Puzzle8 : IPuzzle<long>
         {
             for (int x = 0; x < input.XBoundary; x++)
             {
-                var scanPosition = new Position(x, y);
+                var scanPosition = new Position<int>(x, y);
 
                 if (antennaPosition == scanPosition)
                 {
@@ -99,11 +99,11 @@ public class Puzzle8 : IPuzzle<long>
 
                     // positive direction
                     int gain = 0;
-                    Position antiNode;
+                    Position<int> antiNode;
 
                     do
                     {
-                        antiNode = new Position(antennaPosition.X + xDistance * gain, antennaPosition.Y + yDistance * gain);
+                        antiNode = new Position<int>(antennaPosition.X + xDistance * gain, antennaPosition.Y + yDistance * gain);
 
                         if (IsValidAntiNode(input, antiNode, antiNodes))
                         {
@@ -120,7 +120,7 @@ public class Puzzle8 : IPuzzle<long>
 
                     do
                     {
-                        antiNode = new Position(antennaPosition.X - xDistance * gain, antennaPosition.Y - yDistance * gain);
+                        antiNode = new Position<int>(antennaPosition.X - xDistance * gain, antennaPosition.Y - yDistance * gain);
 
                         if (IsValidAntiNode(input, antiNode, antiNodes))
                         {
@@ -137,7 +137,7 @@ public class Puzzle8 : IPuzzle<long>
         return nodes;
     }
 
-    private int GenerateAntiNodes(CharMapInput input, Position antennaPosition, List<Position> antiNodes)
+    private int GenerateAntiNodes(CharMapInput input, Position<int> antennaPosition, List<Position<int>> antiNodes)
     {
         var nodes = 0;
         var antenna = input.At(antennaPosition);
@@ -147,7 +147,7 @@ public class Puzzle8 : IPuzzle<long>
         {
             for (int x = 0; x < input.XBoundary; x++)
             {
-                var scanPosition = new Position(x, y);
+                var scanPosition = new Position<int>(x, y);
 
                 if (antennaPosition == scanPosition)
                 {
@@ -163,7 +163,7 @@ public class Puzzle8 : IPuzzle<long>
                     var yDistance = antennaPosition.Y - scanPosition.Y;
 
                     // antenna side anti node
-                    var antennaAntiNode = new Position(antennaPosition.X + xDistance, antennaPosition.Y + yDistance);
+                    var antennaAntiNode = new Position<int>(antennaPosition.X + xDistance, antennaPosition.Y + yDistance);
 
                     if (IsValidAntiNode(input, antennaAntiNode, antiNodes))
                     {
@@ -172,7 +172,7 @@ public class Puzzle8 : IPuzzle<long>
                     }
 
                     // scan side anti node
-                    var scanAntiNode = new Position(scanPosition.X - xDistance, scanPosition.Y - yDistance);
+                    var scanAntiNode = new Position<int>(scanPosition.X - xDistance, scanPosition.Y - yDistance);
 
                     if (IsValidAntiNode(input, scanAntiNode, antiNodes))
                     {
@@ -186,7 +186,7 @@ public class Puzzle8 : IPuzzle<long>
         return nodes;
     }
 
-    private static bool IsValidAntiNode(CharMapInput input, Position antiNodePosition, List<Position> antiNodes)
+    private static bool IsValidAntiNode(CharMapInput input, Position<int> antiNodePosition, List<Position<int>> antiNodes)
     {
         if (!input.IsInBoundary(antiNodePosition))
         {

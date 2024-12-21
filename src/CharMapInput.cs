@@ -26,13 +26,13 @@ public class CharMapInput(char[,] map)
         return new CharMapInput(map);
     }
 
-    public bool IsInBoundary(Position position) => position.X >= 0 && position.Y >= 0 && position.X < XBoundary && position.Y < YBoundary;
+    public bool IsInBoundary(Position<int> position) => position.X >= 0 && position.Y >= 0 && position.X < XBoundary && position.Y < YBoundary;
 
     public char[,] CloneMap() => (char[,])Map.Clone();
 
-    public char At(Position position) => Map[position.X, position.Y];
+    public char At(Position<int> position) => Map[position.X, position.Y];
 
-    public void Set(Position position, char value) => Map[position.X, position.Y] = value;
+    public void Set(Position<int>  position, char value) => Map[position.X, position.Y] = value;
 
     public string RenderMap()
     {

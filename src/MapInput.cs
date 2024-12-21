@@ -26,12 +26,12 @@ public class MapInput(int[,] map)
         return new MapInput(map);
     }
 
-    public bool IsInBoundary(Position position) =>
+    public bool IsInBoundary(Position<int> position) =>
         position.X >= 0 && position.Y >= 0 && position.X < XBoundary && position.Y < YBoundary;
 
     public int[,] CloneMap() => (int[,])Map.Clone();
 
-    public int At(Position position) => Map[position.X, position.Y];
+    public int At(Position<int> position) => Map[position.X, position.Y];
 
-    public void Set(Position position, char value) => Map[position.X, position.Y] = value;
+    public void Set(Position<int> position, char value) => Map[position.X, position.Y] = value;
 }

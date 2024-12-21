@@ -6,10 +6,10 @@ public class Puzzle12 : IPuzzle<long>
 {
     private class Region(char descriminator)
     {
-        public List<Position> Positions { get; } = [];
+        public List<Position<int>> Positions { get; } = [];
         public char Descriminator { get; } = descriminator;
 
-        public void Add(Position position)
+        public void Add(Position<int> position)
         {
             if (Positions.Contains(position))
             {
@@ -24,7 +24,7 @@ public class Puzzle12 : IPuzzle<long>
         public int CalculatePerimeter()
         {
             var perimeter = 0;
-            foreach (Position position in Positions)
+            foreach (Position<int> position in Positions)
             {
                 perimeter += 4 - CountNeighbours(position, Positions);
             }
@@ -37,14 +37,14 @@ public class Puzzle12 : IPuzzle<long>
             return 0;
         }
 
-        private int CountNeighbours(Position position, IReadOnlyList<Position> positions)
+        private int CountNeighbours(Position<int> position, IReadOnlyList<Position<int>> positions)
         {
             int neighbours = 0;
 
-            var north = new Position(position.X, position.Y - 1);
-            var east = new Position(position.X + 1, position.Y);
-            var south = new Position(position.X, position.Y + 1);
-            var west = new Position(position.X - 1, position.Y);
+            var north = new Position<int>(position.X, position.Y - 1);
+            var east = new Position<int>(position.X + 1, position.Y);
+            var south = new Position<int>(position.X, position.Y + 1);
+            var west = new Position<int>(position.X - 1, position.Y);
 
             neighbours += positions.Contains(north) ? 1 : 0;
             neighbours += positions.Contains(east) ? 1 : 0;
@@ -64,7 +64,7 @@ public class Puzzle12 : IPuzzle<long>
         _output = output;
     }
 
-    private List<Position> _seen = [];
+    private List<Position<int>> _seen = [];
 
     public long SolvePartOne(string rawInput)
     {
@@ -76,7 +76,7 @@ public class Puzzle12 : IPuzzle<long>
         {
             for (var x = 0; x < input.XBoundary; x++)
             {
-                var position = new Position(x, y);
+                var position = new Position<int>(x, y);
                 if (_seen.Contains(position))
                 {
                     continue;
@@ -100,22 +100,22 @@ public class Puzzle12 : IPuzzle<long>
         return sum;
     }
 
-    private void DiscoverRegion(Position position, CharMapInput input, Region region)
+    private void DiscoverRegion(Position<int> position, CharMapInput input, Region region)
     {
         // check north
-        var north = new Position(position.X, position.Y - 1);
+        var north = new Position<int>(position.X, position.Y - 1);
         AddIfValid(north, input, region);
 
         // check east
-        var east = new Position(position.X + 1, position.Y);
+        var east = new Position<int>(position.X + 1, position.Y);
         AddIfValid(east, input, region);
 
         // check south
-        var south = new Position(position.X, position.Y + 1);
+        var south = new Position<int>(position.X, position.Y + 1);
         AddIfValid(south, input, region);
 
         // check west
-        var west = new Position(position.X - 1, position.Y);
+        var west = new Position<int>(position.X - 1, position.Y);
         AddIfValid(west, input, region);
 
         if (region.Positions.Count == 0)
@@ -125,7 +125,7 @@ public class Puzzle12 : IPuzzle<long>
         }
     }
 
-    private void AddIfValid(Position position, CharMapInput input, Region region)
+    private void AddIfValid(Position<int> position, CharMapInput input, Region region)
     {
         if (input.IsInBoundary(position)
             && input.At(position) == region.Descriminator &&

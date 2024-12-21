@@ -53,7 +53,7 @@ public class Puzzle6 : IPuzzle<int>
     public int SolvePartOne(string rawInput)
     {
         var input = Input.Parse(rawInput);
-        var bounds = new Position(input.XBoundary, input.YBoundary);
+        var bounds = new Position<int>(input.XBoundary, input.YBoundary);
 
         var direction = Direction.North;
         var position = GetInitialPosition(input.Map, bounds);
@@ -95,7 +95,7 @@ public class Puzzle6 : IPuzzle<int>
     {
         var sum = 0;
         var input = Input.Parse(rawInput);
-        var bounds = new Position(input.XBoundary, input.YBoundary);
+        var bounds = new Position<int>(input.XBoundary, input.YBoundary);
 
         for (int y = 0; y < input.YBoundary; y++)
         {
@@ -121,14 +121,14 @@ public class Puzzle6 : IPuzzle<int>
         return sum;
     }
 
-    private bool IsLoopingMap(char[,] map, Position bounds)
+    private bool IsLoopingMap(char[,] map, Position<int> bounds)
     {
         var direction = Direction.North;
         var start = GetInitialPosition(map, bounds);
         var position = start;
 
 
-        var visited = new Dictionary<Position, List<Direction>>();
+        var visited = new Dictionary<Position<int>, List<Direction>>();
 
         while (IsInBoundary(position, bounds))
         {
@@ -189,7 +189,7 @@ public class Puzzle6 : IPuzzle<int>
         _ => throw new ArgumentException($"Invalid direction: {direction}")
     };
 
-    private static Position GetInitialPosition(char[,] map, Position bounds)
+    private static Position<int> GetInitialPosition(char[,] map, Position<int> bounds)
     {
         for (int y = 0; y < bounds.Y; y++)
         {
@@ -207,7 +207,7 @@ public class Puzzle6 : IPuzzle<int>
         throw new ArgumentException("Could not find guard in map");
     }
 
-    private void RenderMap(char[,] map, Position bounds)
+    private void RenderMap(char[,] map, Position<int> bounds)
     {
         if (!IsRenderingEnabled)
         {
@@ -230,14 +230,14 @@ public class Puzzle6 : IPuzzle<int>
         _output.WriteLine(builder.ToString());
     }
 
-    private static bool IsInBoundary(Position position, Position maxBounds) => position.X >= 0 && position.Y >= 0 && position.X < maxBounds.X && position.Y < maxBounds.Y;
+    private static bool IsInBoundary(Position<int> position, Position<int> maxBounds) => position.X >= 0 && position.Y >= 0 && position.X < maxBounds.X && position.Y < maxBounds.Y;
 
-    private static Position GetNextCell(Position position, Direction direction) => direction switch
+    private static Position<int> GetNextCell(Position<int> position, Direction direction) => direction switch
     {
-        Direction.North => new Position(position.X, position.Y - 1),
-        Direction.East => new Position(position.X + 1, position.Y),
-        Direction.South => new Position(position.X, position.Y + 1),
-        Direction.West => new Position(position.X - 1, position.Y),
+        Direction.North => new Position<int>(position.X, position.Y - 1),
+        Direction.East => new Position<int>(position.X + 1, position.Y),
+        Direction.South => new Position<int>(position.X, position.Y + 1),
+        Direction.West => new Position<int>(position.X - 1, position.Y),
 
         _ => throw new ArgumentException($"Invalid direction: {direction}"),
     };

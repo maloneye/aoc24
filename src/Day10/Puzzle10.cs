@@ -30,7 +30,7 @@ public class Puzzle10 : IPuzzle<long>
                 var element = input.Map[x, y];
                 if (element == 0)
                 {
-                    sum += FindTrails(input, new Position(x, y), 0,[]);
+                    sum += FindTrails(input, new Position<int>(x, y), 0,[]);
                 }
             }
         }
@@ -50,7 +50,7 @@ public class Puzzle10 : IPuzzle<long>
                 var element = input.Map[x, y];
                 if (element == 0)
                 {
-                    sum += FindTrailsDistinct(input, new Position(x, y), 0);
+                    sum += FindTrailsDistinct(input, new Position<int>(x, y), 0);
                 }
             }
         }
@@ -58,7 +58,7 @@ public class Puzzle10 : IPuzzle<long>
         return sum;
     }
 
-    private int FindTrails(MapInput input, Position position, int height, List<Position> trailTops)
+    private int FindTrails(MapInput input, Position<int> position, int height, List<Position<int>> trailTops)
     {
         if (height == 9)
         {
@@ -75,7 +75,7 @@ public class Puzzle10 : IPuzzle<long>
         height++;
 
         // check north
-        var north = new Position(position.X, position.Y - 1);
+        var north = new Position<int>(position.X, position.Y - 1);
         if (input.IsInBoundary(north)
             && IsValidHeight(input, height, north))
         {
@@ -83,7 +83,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check east
-        var east = new Position(position.X + 1, position.Y);
+        var east = new Position<int>(position.X + 1, position.Y);
         if (input.IsInBoundary(east)
             && IsValidHeight(input, height, east))
         {
@@ -91,7 +91,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check south
-        var south = new Position(position.X, position.Y + 1);
+        var south = new Position<int>(position.X, position.Y + 1);
         if (input.IsInBoundary(south)
             && IsValidHeight(input, height, south))
         {
@@ -99,7 +99,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check west
-        var west = new Position(position.X - 1, position.Y);
+        var west = new Position<int>(position.X - 1, position.Y);
         if (input.IsInBoundary(west)
             && IsValidHeight(input, height, west))
         {
@@ -109,7 +109,7 @@ public class Puzzle10 : IPuzzle<long>
         return sum;
     }
 
-    private int FindTrailsDistinct(MapInput input, Position position, int height)
+    private int FindTrailsDistinct(MapInput input, Position<int> position, int height)
     {
         if (height == 9)
         {
@@ -120,7 +120,7 @@ public class Puzzle10 : IPuzzle<long>
         height++;
 
         // check north
-        var north = new Position(position.X, position.Y - 1);
+        var north = new Position<int>(position.X, position.Y - 1);
         if (input.IsInBoundary(north)
             && IsValidHeight(input, height, north))
         {
@@ -128,7 +128,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check east
-        var east = new Position(position.X + 1, position.Y);
+        var east = new Position<int>(position.X + 1, position.Y);
         if (input.IsInBoundary(east)
             && IsValidHeight(input, height, east))
         {
@@ -136,7 +136,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check south
-        var south = new Position(position.X, position.Y + 1);
+        var south = new Position<int>(position.X, position.Y + 1);
         if (input.IsInBoundary(south)
             && IsValidHeight(input, height, south))
         {
@@ -144,7 +144,7 @@ public class Puzzle10 : IPuzzle<long>
         }
 
         // check west
-        var west = new Position(position.X - 1, position.Y);
+        var west = new Position<int>(position.X - 1, position.Y);
         if (input.IsInBoundary(west)
             && IsValidHeight(input, height, west))
         {
@@ -154,6 +154,6 @@ public class Puzzle10 : IPuzzle<long>
         return sum;
     }
     
-    private static bool IsValidHeight(MapInput input, int height, Position position) =>
+    private static bool IsValidHeight(MapInput input, int height, Position<int> position) =>
         input.Map[position.X, position.Y] == height;
 }
