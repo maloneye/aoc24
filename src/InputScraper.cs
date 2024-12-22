@@ -42,6 +42,7 @@ public class InputScraper : IInputSource
         response.EnsureSuccessStatusCode();
 
         input = await response.Content.ReadAsStringAsync(token);
+        input = input.TrimEnd('\n');
         _cache.TryAdd(day, input);
 
         await FlushCacheToFile();

@@ -12,7 +12,7 @@ public class InputScraperTests
         var scraper = new InputScraper();
         
         // Act
-        var actual = await scraper.GetInput(3);
+        var actual = await scraper.GetInput(14);
         
         // Assert
         Assert.Equal(expected,actual);
