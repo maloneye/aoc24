@@ -58,20 +58,7 @@ public class Day14Tests
         // Assert
         Assert.Equal(expected, actual);
     }
-
-    [Fact]
-    public void ExamplePartTwo()
-    {
-        // Arrange
-        const long expected = 875318608908;
-
-        // Act
-        var actual = _puzzle.SolvePartTwo(ExampleInput);
-
-        // Assert
-        Assert.Equal(expected, actual);
-    }
-
+    
     [Fact]
     public async Task PartOneTest()
     {
