@@ -25,6 +25,7 @@ public class Day25Tests
         Puzzle25.Pins[] keys = [new(6,1,3,2,4),new(5,4,5,1,3), new(4,1,3,1,2)];
 
         var expected = new Puzzle25.Input(locks, keys);
+        
         // Act
         var actual = Puzzle25.Input.Parse(ExampleInput);
 
