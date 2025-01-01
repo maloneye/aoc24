@@ -9,10 +9,10 @@ namespace AOC24.Day25;
 
 public class Puzzle25 : IPuzzle<int>
 {
-    public class Input(IEnumerable<Pins> keys, IEnumerable<Pins> locks)
+    public class Input(IEnumerable<Pins> locks, IEnumerable<Pins> keys)
     {
-        private IReadOnlyList<Pins> Keys { get; } = keys.ToList();
-        private IReadOnlyList<Pins> Locks { get; } = locks.ToList();
+        public IReadOnlyList<Pins> Locks { get; } = locks.ToList();
+        public IReadOnlyList<Pins> Keys { get; } = keys.ToList();
 
         public static Input Parse(string rawInput)
         {
@@ -20,48 +20,44 @@ public class Puzzle25 : IPuzzle<int>
             var start = 0;
             var end = -1;
 
-            List<Pins> keys = [];
             List<Pins> locks = [];
+            List<Pins> keys = [];
 
             while (start < span.Length)
             {
-                end = span[start..].IndexOf("\n\n");
+                var index = span[start..].IndexOf("\n\n");
+                end = index == -1 ? span.Length : start+index;
 
-                if (end == -1)
-                {
-                    break;
-                }
-
-                var slice = span[start..(start + end)];
+                var slice = span[start..end];
 
                 var pin0 = GetPin(0, slice);
-                var pin1 = GetPin(0, slice);
-                var pin2 = GetPin(0, slice);
-                var pin3 = GetPin(0, slice);
-                var pin4 = GetPin(0, slice);
+                var pin1 = GetPin(1, slice);
+                var pin2 = GetPin(2, slice);
+                var pin3 = GetPin(3, slice);
+                var pin4 = GetPin(4, slice);
 
                 var pins = new Pins(pin0, pin1, pin2, pin3, pin4);
 
                 if (slice[0] == '#')
                 {
-                    keys.Add(pins);
+                    locks.Add(pins);
                 }
                 else
                 {
-                    locks.Add(pins);
+                    keys.Add(pins);
                 }
 
-                start = start + end + 2;
+                start = end + 2;
             }
 
-            return new Input(keys, locks);
+            return new Input(locks, keys);
         }
 
         private static int GetPin(int offset, ReadOnlySpan<char> slice)
         {
             var sum = 0;
 
-            for (int y = offset; y < slice.Length; y += 5)
+            for (int y = offset; y < slice.Length; y += 6)
             {
                 if (slice[y] == '#')
                 {
@@ -106,6 +102,10 @@ public class Puzzle25 : IPuzzle<int>
         var sum = 0;
         var input = Input.Parse(rawInput);
 
+        for (int i = 0; i < input.Keys.Count; i++)
+        {
+            
+        }
 
         return sum;
     }

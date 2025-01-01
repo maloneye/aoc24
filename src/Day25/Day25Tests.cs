@@ -21,10 +21,10 @@ public class Day25Tests
     public void InputParserTest()
     {
         // Arrange
-        Puzzle25.Pins[] keys = [new(1,6,4,5,4),new(2,3,1,6,4)];
-        Puzzle25.Pins[] locks = [new(6,1,3,2,4),new(5,4,5,1,3), new(4,1,3,1,2)];
+        Puzzle25.Pins[] locks = [new(1,6,4,5,4),new(2,3,1,6,4)];
+        Puzzle25.Pins[] keys = [new(6,1,3,2,4),new(5,4,5,1,3), new(4,1,3,1,2)];
 
-        var expected = new Puzzle25.Input(keys, locks);
+        var expected = new Puzzle25.Input(locks, keys);
         // Act
         var actual = Puzzle25.Input.Parse(ExampleInput);
 
@@ -36,7 +36,7 @@ public class Day25Tests
     public void ExamplePartOne()
     {
         // Arrange
-        const int expected = 10092;
+        const int expected = 3;
 
         // Act
         var actual = _puzzle.SolvePartOne(ExampleInput);
