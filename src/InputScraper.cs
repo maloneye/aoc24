@@ -58,7 +58,7 @@ public class InputScraper : IInputSource
 
         foreach (var file in files)
         {
-            var fileName = file.Split('/').Last();
+            var fileName = file.Split('\\').Last();
             var key = int.Parse(fileName);
             
             var readTask = Task.Run(async () =>
